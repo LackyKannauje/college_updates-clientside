@@ -43,11 +43,12 @@ class ApiService {
 
   Future<String> toggleFollow(String userId, bool isFollower) async {
     String? token = await getToken();
+    if (token == null) return 'Error';
     String followUnfollow = isFollower ? 'unfollow' : 'follow';
 
     final response = await http.post(
       Uri.parse("$userBaseUrl$followUnfollow/$userId"),
-      headers: {'x-auth-token': token!},
+      headers: {'x-auth-token': token},
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -72,6 +73,7 @@ class ApiService {
       }
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
