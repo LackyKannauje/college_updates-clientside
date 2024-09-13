@@ -1,0 +1,18 @@
+{
+    "_id": "66c332fce9d549db973df649",
+    "user": "66c1eecbd41305c001f4bb5c",
+    "title": "Qiqi",
+    "description": "hu tao is finding me help!",
+    "media": [
+        {
+            "url": "https://res.cloudinary.com/dxzuo318f/image/upload/v1724068604/post_images/media-1724068603985.jpg",
+            "type": "image",
+            "_id": "66c332fce9d549db973df64a"
+        }
+    ],
+    "likes": 0,
+    "comments": [],
+    "createdAt": "2024-08-19T11: 56: 44.571Z",
+    "__v": 0
+}
+

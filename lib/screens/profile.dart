@@ -464,11 +464,13 @@
 // }
 
 import 'package:college_updates/auth/auth.dart';
+import 'package:college_updates/model/post_model.dart';
 import 'package:college_updates/model/profile_model.dart';
 import 'package:college_updates/screens/views/follow_message.dart';
 import 'package:college_updates/screens/views/followers_following.dart';
 import 'package:college_updates/screens/views/post_image.dart';
 import 'package:college_updates/screens/views/profile_upper.dart';
+import 'package:college_updates/services/post_api.dart';
 import 'package:college_updates/services/user_api.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -490,21 +492,23 @@ class _ProfilePageState extends State<ProfilePage>
   int _selectedIndex = 0;
   var _tabController;
   late ProfileModel profileDetails;
+  late List<PostModel> posts = [];
 
-  final ApiService _apiService = ApiService();
+  final UserApiService _apiService = UserApiService();
+  final PostApiService _postApiService = PostApiService();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    // Listen to the tab changes to track the selected index
     _tabController.addListener(() {
       setState(() {
         _selectedIndex = _tabController.index;
       });
     });
     fetchProfileDetails();
+    fetchPostDetails();
   }
 
   @override
@@ -537,6 +541,15 @@ class _ProfilePageState extends State<ProfilePage>
           builder: (context) => AuthScreen(),
         ),
       );
+    }
+  }
+
+  Future<void> fetchPostDetails() async {
+    List<PostModel>? postList = await _postApiService.fetchPosts(widget.id);
+    if (postList!.isNotEmpty) {
+      setState(() {
+        posts = postList;
+      });
     }
   }
 
@@ -625,7 +638,9 @@ class _ProfilePageState extends State<ProfilePage>
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-                      ImagePostView(),
+                      ImagePostView(
+                        posts: posts,
+                      ),
                       Text("hey"),
                       Text("hello"),
                     ],

@@ -1,13 +1,20 @@
 import 'dart:convert';
 import 'package:college_updates/model/profile_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../const.dart';
 
-class ApiService {
+class UserApiService {
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
+    final token = prefs.getString('token');
+    final isTokenExpired = JwtDecoder.isExpired(token!);
+    if (isTokenExpired) {
+      prefs.remove('token');
+      return null;
+    }
+    return token;
   }
 
   Future<ProfileModel?> fetchProfileDetails(String userId) async {
@@ -20,6 +27,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final jsonBody = jsonDecode(response.body);
+
       return ProfileModel.fromJson(jsonBody);
     } else {
       return null;

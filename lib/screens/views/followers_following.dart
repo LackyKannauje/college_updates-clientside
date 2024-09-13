@@ -5,7 +5,7 @@ import 'package:college_updates/snackbar.dart';
 import 'package:flutter/material.dart';
 
 class AllFollowDetails extends StatelessWidget {
-  AllFollowDetails({
+  const AllFollowDetails({
     super.key,
     required this.profileDetails,
     required this.id,
@@ -16,7 +16,7 @@ class AllFollowDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ApiService _apiService = ApiService();
+    final UserApiService _apiService = UserApiService();
     Future<void> showAllFollowersOrFollowing(String listUsersOf) async {
       final userId = id;
       final followerList = await _apiService.fetchUsers(userId, listUsersOf);

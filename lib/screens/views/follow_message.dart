@@ -22,7 +22,7 @@ class FollowMessageView extends StatefulWidget {
 }
 
 class _FollowMessageViewState extends State<FollowMessageView> {
-  final ApiService _apiService = ApiService();
+  final UserApiService _apiService = UserApiService();
   Future<void> toggleFollow() async {
     setState(() {
       widget.isLoadingFollow = true;

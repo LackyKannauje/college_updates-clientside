@@ -19,7 +19,7 @@ class _ExplorePageState extends State<ExplorePage> {
       isLoading = true;
     });
 
-    searchResults = await ApiService().searchUser(value);
+    searchResults = await UserApiService().searchUser(value);
 
     setState(() {
       isLoading = false;
