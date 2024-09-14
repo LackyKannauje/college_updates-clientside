@@ -14,31 +14,35 @@ class ImagePostView extends StatelessWidget {
     final imagePosts = posts.where((post) {
       return post.media.isNotEmpty && post.media[0]['type'] == 'image';
     }).toList();
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-      ),
-      itemCount: imagePosts.length,
-      itemBuilder: (BuildContext context, int index) {
-        return InkWell(
-          onTap: () {
-            final PostModel post = imagePosts[index];
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PostViewPage(
-                  post: post,
+    return imagePosts.isEmpty
+        ? Center(
+            child: Text('No Image Posts'),
+          )
+        : GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+            ),
+            itemCount: imagePosts.length,
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                onTap: () {
+                  final List<PostModel> post = [imagePosts[index]];
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PostViewPage(
+                        posts: post,
+                      ),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(2),
+                  child: Image.network(imagePosts[index].media[0]['url'],
+                      fit: BoxFit.cover),
                 ),
-              ),
-            );
-          },
-          child: Padding(
-            padding: EdgeInsets.all(2),
-            child: Image.network(imagePosts[index].media[0]['url'],
-                fit: BoxFit.cover),
-          ),
-        );
-      },
-    );
+              );
+            },
+          );
   }
 }

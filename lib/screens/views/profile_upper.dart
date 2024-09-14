@@ -61,7 +61,7 @@ class ProfileDescriptionView extends StatelessWidget {
           child: ClipRRect(
             child: Image.network(
               profileDetails.profilePicture == ''
-                  ? "https://picsum.photos/200/300"
+                  ? "https://randomuser.me/api/portraits/thumb/women/81.jpg"
                   : profileDetails.profilePicture,
               height: 120,
               width: 120,

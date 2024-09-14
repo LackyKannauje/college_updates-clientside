@@ -105,7 +105,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(
                                   searchResult['profilePicture'] == ''
-                                      ? 'https://picsum.photos/200/300'
+                                      ? 'https://randomuser.me/api/portraits/thumb/women/81.jpg'
                                       : searchResult['profilePicture'],
                                   fit: BoxFit.cover,
                                   width: 45,

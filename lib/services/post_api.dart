@@ -28,6 +28,7 @@ class PostApiService {
 
     if (response.statusCode == 200) {
       final jsonBody = jsonDecode(response.body);
+      print(jsonBody);
       return PostModel.fromJsonList(jsonBody);
     } else {
       return [];

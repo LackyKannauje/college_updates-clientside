@@ -507,6 +507,7 @@ class _ProfilePageState extends State<ProfilePage>
         _selectedIndex = _tabController.index;
       });
     });
+
     fetchProfileDetails();
     fetchPostDetails();
   }

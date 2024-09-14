@@ -21,8 +21,8 @@ class ProfileModel {
       username: json['username'],
       profilePicture: json['profilePicture'] ?? '',
       bio: json['bio'] ?? '',
-      followers: json['followers'] ?? [],
-      following: json['following'] ?? [],
+      followers: json['followers'],
+      following: json['following'],
     );
   }
 }

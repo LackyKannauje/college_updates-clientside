@@ -72,7 +72,7 @@ class AllFollowDetails extends StatelessWidget {
                         borderRadius: BorderRadius.circular(100),
                         child: Image.network(
                           follower['profilePicture'] == ''
-                              ? 'https://picsum.photos/200/300'
+                              ? 'https://randomuser.me/api/portraits/thumb/women/81.jpg'
                               : follower['profilePicture'],
                           width: 50,
                           height: 50,

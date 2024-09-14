@@ -1,11 +1,10 @@
-import 'package:college_updates/auth/auth.dart';
 import 'package:college_updates/model/profile_model.dart';
 import 'package:college_updates/services/user_api.dart';
 import 'package:college_updates/snackbar.dart';
 import 'package:flutter/material.dart';
 
 class FollowMessageView extends StatefulWidget {
-  FollowMessageView({
+  const FollowMessageView({
     super.key,
     required this.id,
     required this.isLoadingFollow,
@@ -13,38 +12,41 @@ class FollowMessageView extends StatefulWidget {
     required this.profileDetails,
   });
   final String id;
-  bool isLoadingFollow;
-  bool isFollower;
-  ProfileModel profileDetails;
+  final bool isLoadingFollow;
+  final bool isFollower;
+  final ProfileModel profileDetails;
 
   @override
   State<FollowMessageView> createState() => _FollowMessageViewState();
 }
 
 class _FollowMessageViewState extends State<FollowMessageView> {
+  bool isLoadingFollow = false;
+  bool isFollower = false;
   final UserApiService _apiService = UserApiService();
   Future<void> toggleFollow() async {
     setState(() {
-      widget.isLoadingFollow = true;
+      isLoadingFollow = true;
     });
-    String msg = await _apiService.toggleFollow(widget.id, widget.isFollower);
+    String msg = await _apiService.toggleFollow(widget.id, isFollower);
     if (msg == 'Error') {
-      showSnackBar('Something went wrong! login again', context);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AuthScreen(),
-        ),
-      );
+      showSnackBar('Something went wrong! try again', context);
     }
-    widget.isFollower
+    isFollower
         ? widget.profileDetails.followers.remove(widget.id)
         : widget.profileDetails.followers.add(widget.id);
     setState(() {
-      widget.isFollower = !widget.isFollower;
-      widget.isLoadingFollow = false;
+      isFollower = !isFollower;
+      isLoadingFollow = false;
     });
     showSnackBar(msg, context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isFollower = widget.isFollower;
+    isLoadingFollow = widget.isLoadingFollow;
   }
 
   @override
@@ -52,7 +54,7 @@ class _FollowMessageViewState extends State<FollowMessageView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        widget.isLoadingFollow
+        isLoadingFollow
             ? SizedBox(
                 width: 110,
                 child: Center(
@@ -65,7 +67,7 @@ class _FollowMessageViewState extends State<FollowMessageView> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 6),
                   decoration: BoxDecoration(
-                    color: widget.isFollower ? null : Color(0xFFC683E5),
+                    color: isFollower ? null : Color(0xFFC683E5),
                     border: Border.all(color: Color(0xFFC683E5)),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -73,20 +75,16 @@ class _FollowMessageViewState extends State<FollowMessageView> {
                     children: [
                       Icon(
                         Icons.person_add_alt_1_outlined,
-                        color: widget.isFollower
-                            ? Color(0xFFC683E5)
-                            : Colors.white,
+                        color: isFollower ? Color(0xFFC683E5) : Colors.white,
                         size: 20,
                       ),
                       SizedBox(
                         width: 5,
                       ),
                       Text(
-                        widget.isFollower ? "Following" : "Follow",
+                        isFollower ? "Following" : "Follow",
                         style: TextStyle(
-                          color: widget.isFollower
-                              ? Color(0xFFC683E5)
-                              : Colors.white,
+                          color: isFollower ? Color(0xFFC683E5) : Colors.white,
                           fontSize: 16,
                         ),
                       ),

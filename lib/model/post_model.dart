@@ -1,6 +1,6 @@
 class PostModel {
   final String postId;
-  final String userId;
+  final User user;
   final String title;
   final String description;
   final int likes;
@@ -10,7 +10,7 @@ class PostModel {
 
   PostModel({
     required this.postId,
-    required this.userId,
+    required this.user,
     required this.title,
     required this.description,
     required this.likes,
@@ -22,7 +22,7 @@ class PostModel {
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
       postId: json['_id'],
-      userId: json['user'],
+      user: User.fromJson(json['user']),
       title: json['title'],
       description: json['description'],
       likes: json['likes'],
@@ -34,5 +34,29 @@ class PostModel {
 
   static List<PostModel> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((json) => PostModel.fromJson(json)).toList();
+  }
+}
+
+class User {
+  final String id;
+  final String username;
+  final String profilePicture;
+  final String bio;
+
+  User({
+    required this.id,
+    required this.username,
+    required this.profilePicture,
+    required this.bio,
+  });
+
+  // Factory method to parse JSON into User object
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['_id'],
+      username: json['username'],
+      profilePicture: json['profilePicture'],
+      bio: json['bio'],
+    );
   }
 }
