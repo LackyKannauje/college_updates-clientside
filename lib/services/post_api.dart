@@ -23,7 +23,7 @@ class PostApiService {
     String? token = await getToken();
     if (token == null) return [];
 
-    final response = await http.get(Uri.parse("${postBaseUrl}/user/$userId"),
+    final response = await http.get(Uri.parse("${postBaseUrl}user/$userId"),
         headers: {'x-auth-token': token});
 
     if (response.statusCode == 200) {
@@ -32,6 +32,23 @@ class PostApiService {
       return PostModel.fromJsonList(jsonBody);
     } else {
       return [];
+    }
+  }
+
+  Future<String?> doLikePost(String postId) async {
+    String? token = await getToken();
+    if (token == null) return null;
+
+    final response = await http.post(
+      Uri.parse("${postBaseUrl}like/$postId"),
+      headers: {'x-auth-token': token},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonBody = jsonDecode(response.body);
+      return jsonBody['message'];
+    } else {
+      return null;
     }
   }
 }

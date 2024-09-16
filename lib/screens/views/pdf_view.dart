@@ -24,21 +24,22 @@ class PdfViewWidget extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 3,
                 blurRadius: 5,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.picture_as_pdf, size: 100, color: Colors.red),
-            SizedBox(
+            const Icon(Icons.picture_as_pdf, size: 100, color: Colors.red),
+            const SizedBox(
               height: 20,
             ),
-            Text('PDF Preview', style: TextStyle(fontSize: 17)),
+            const Text('PDF Preview', style: TextStyle(fontSize: 17)),
             ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFFC683E5)),
+                backgroundColor:
+                    MaterialStateProperty.all(const Color(0xFFC683E5)),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -53,7 +54,7 @@ class PdfViewWidget extends StatelessWidget {
                   ),
                 );
               },
-              child: Text(
+              child: const Text(
                 'Open PDF',
                 style: TextStyle(color: Colors.white),
               ),
@@ -68,7 +69,7 @@ class PdfViewWidget extends StatelessWidget {
 class PdfViewPage extends StatefulWidget {
   final String pdfUrl;
 
-  PdfViewPage({required this.pdfUrl});
+  const PdfViewPage({super.key, required this.pdfUrl});
 
   @override
   _PdfViewPageState createState() => _PdfViewPageState();
@@ -105,7 +106,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('PDF Viewer')),
+      appBar: AppBar(title: const Text('PDF Viewer')),
       body: _localPath != null
           ? PDFView(
               filePath: _localPath!,
@@ -123,7 +124,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
                 print('$page: ${error.toString()}');
               },
             )
-          : Center(child: CircularProgressIndicator()),
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

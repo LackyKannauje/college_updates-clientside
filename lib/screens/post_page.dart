@@ -1,12 +1,14 @@
-// import 'package:college_updates/model/post_model.dart';
-// import 'package:college_updates/screens/profile.dart';
+// import 'package:college_updates/screens/views/media_view.dart';
 // import 'package:flutter/material.dart';
 // import 'package:carousel_slider/carousel_slider.dart';
 // import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+// import 'package:college_updates/model/post_model.dart';
+// import 'profile.dart';
 
 // class PostViewPage extends StatefulWidget {
 //   final List<PostModel> posts;
 //   final int postIndex;
+
 //   const PostViewPage({required this.posts, required this.postIndex, super.key});
 
 //   @override
@@ -15,14 +17,14 @@
 
 // class _PostViewPageState extends State<PostViewPage> {
 //   final ItemScrollController _scrollController = ItemScrollController();
+
 //   @override
 //   void initState() {
 //     super.initState();
-//     // Scroll to the selected item when the page loads
 //     WidgetsBinding.instance.addPostFrameCallback((_) {
 //       _scrollController.scrollTo(
 //         index: widget.postIndex,
-//         duration: Duration(milliseconds: 1000),
+//         duration: Duration(milliseconds: 500),
 //         curve: Curves.easeInOut,
 //       );
 //     });
@@ -42,8 +44,10 @@
 //         scrollDirection: Axis.vertical,
 //         itemBuilder: (BuildContext context, int index) {
 //           final post = widget.posts[index];
-//           final imagePosts = post.media.where((media) {
-//             return media != [] && media['type'] == 'image';
+
+//           // Filter for all media in the post (image, video, pdf)
+//           final mediaPosts = post.media.where((media) {
+//             return media.isNotEmpty;
 //           }).toList();
 
 //           return Column(
@@ -69,43 +73,31 @@
 //                     overflow: TextOverflow.ellipsis,
 //                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
 //                   ),
-//                   subtitle: SizedBox(
-//                     width: MediaQuery.of(context).size.width * 0.6,
-//                     child: Text(
-//                       post.user.bio == '' ? 'Student' : post.user.bio,
-//                       overflow: TextOverflow.ellipsis,
-//                       style: TextStyle(fontSize: 13),
-//                     ),
+//                   subtitle: Text(
+//                     post.user.bio == '' ? 'Student' : post.user.bio,
+//                     overflow: TextOverflow.ellipsis,
+//                     style: TextStyle(fontSize: 13),
 //                   ),
 //                   trailing: Icon(Icons.more_vert),
 //                 ),
 //               ),
+
+//               // Media Carousel
 //               CarouselSlider(
 //                 options: CarouselOptions(
 //                   padEnds: false,
 //                   aspectRatio: 1,
 //                   viewportFraction: 1.0,
 //                   enableInfiniteScroll: false,
+//                   autoPlay: true,
 //                   initialPage: 0,
 //                 ),
-//                 items: imagePosts.map(
-//                   (imagePost) {
-//                     return Builder(
-//                       builder: (BuildContext context) {
-//                         return Container(
-//                           width: MediaQuery.of(context).size.width,
-//                           // margin: EdgeInsets.symmetric(horizontal: 5.0),
-//                           color: Colors.black,
-//                           child: Image.network(
-//                             imagePost['url'],
-//                             fit: BoxFit.scaleDown,
-//                           ),
-//                         );
-//                       },
-//                     );
-//                   },
-//                 ).toList(),
+//                 items: mediaPosts.map((mediaPost) {
+//                   return MediaView(media: mediaPost);
+//                 }).toList(),
 //               ),
+
+//               // Likes, Comments, and Post Details
 //               Row(
 //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                 children: [
@@ -128,11 +120,15 @@
 //                   ),
 //                   Padding(
 //                     padding: EdgeInsets.only(right: 15),
-//                     child: Text(post.uploadTime.toString().substring(0, 10),
-//                         style: TextStyle(color: Colors.grey)),
+//                     child: Text(
+//                       post.uploadTime.toString().substring(0, 10),
+//                       style: TextStyle(color: Colors.grey),
+//                     ),
 //                   ),
 //                 ],
 //               ),
+
+//               // Post Title and Description
 //               Padding(
 //                 padding: EdgeInsets.symmetric(horizontal: 15),
 //                 child: Row(
@@ -143,9 +139,8 @@
 //                   ],
 //                 ),
 //               ),
-//               SizedBox(
-//                 height: 20,
-//               ),
+
+//               SizedBox(height: 20),
 //             ],
 //           );
 //         },
@@ -154,7 +149,7 @@
 //   }
 // }
 
-import 'package:college_updates/screens/media_view.dart';
+import 'package:college_updates/screens/views/media_view.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -180,8 +175,9 @@ class _PostViewPageState extends State<PostViewPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.scrollTo(
         index: widget.postIndex,
-        duration: Duration(milliseconds: 1000),
-        curve: Curves.easeInOut,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.fastEaseInToSlowEaseOut,
+        // curve: Curves.easeInOut,
       );
     });
   }
@@ -201,10 +197,8 @@ class _PostViewPageState extends State<PostViewPage> {
         itemBuilder: (BuildContext context, int index) {
           final post = widget.posts[index];
 
-          // Filter for all media in the post (image, video, pdf)
-          final mediaPosts = post.media.where((media) {
-            return media.isNotEmpty;
-          }).toList();
+          // Directly access mediaPosts without filtering repeatedly
+          final mediaPosts = post.media;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,9 +214,11 @@ class _PostViewPageState extends State<PostViewPage> {
                 },
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(post.user.profilePicture == ''
-                        ? 'https://randomuser.me/api/portraits/thumb/women/81.jpg'
-                        : post.user.profilePicture),
+                    backgroundImage: NetworkImage(
+                      post.user.profilePicture.isEmpty
+                          ? 'https://randomuser.me/api/portraits/thumb/women/81.jpg'
+                          : post.user.profilePicture,
+                    ),
                   ),
                   title: Text(
                     post.user.username,
@@ -230,7 +226,7 @@ class _PostViewPageState extends State<PostViewPage> {
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
                   ),
                   subtitle: Text(
-                    post.user.bio == '' ? 'Student' : post.user.bio,
+                    post.user.bio.isEmpty ? 'Student' : post.user.bio,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 13),
                   ),
@@ -239,19 +235,21 @@ class _PostViewPageState extends State<PostViewPage> {
               ),
 
               // Media Carousel
-              CarouselSlider(
-                options: CarouselOptions(
-                  padEnds: false,
-                  aspectRatio: 1,
-                  viewportFraction: 1.0,
-                  enableInfiniteScroll: false,
-                  autoPlay: true,
-                  initialPage: 0,
+              if (mediaPosts.length == 1) MediaView(media: mediaPosts[0]),
+              if (mediaPosts.length > 1)
+                CarouselSlider.builder(
+                  itemBuilder: (context, itemIndex, pageViewIndex) {
+                    return MediaView(media: mediaPosts[itemIndex]);
+                  },
+                  itemCount: mediaPosts.length,
+                  options: CarouselOptions(
+                    pauseAutoPlayOnTouch: true,
+                    aspectRatio: 9 / 16.5,
+                    viewportFraction: 1.0,
+                    enableInfiniteScroll: false,
+                    initialPage: 0,
+                  ),
                 ),
-                items: mediaPosts.map((mediaPost) {
-                  return MediaView(media: mediaPost);
-                }).toList(),
-              ),
 
               // Likes, Comments, and Post Details
               Row(
@@ -289,13 +287,19 @@ class _PostViewPageState extends State<PostViewPage> {
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   children: [
-                    Text("${post.title} ● ",
-                        style: TextStyle(fontWeight: FontWeight.w500)),
-                    Text("${post.description}"),
+                    Text(
+                      "${post.title} ● ",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Flexible(
+                      child: Text(
+                        post.description,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
               ),
-
               SizedBox(height: 20),
             ],
           );

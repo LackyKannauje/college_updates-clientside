@@ -24,7 +24,7 @@ class MediaView extends StatelessWidget {
       case 'pdf':
         return PdfViewWidget(pdfUrl: media['url']);
       default:
-        return Center(
+        return const Center(
           child: Text('Unsupported media type'),
         );
     }

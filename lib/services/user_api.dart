@@ -39,7 +39,7 @@ class UserApiService {
     if (token == null) return [];
 
     final response = await http.get(
-        Uri.parse("$userBaseUrl/$userId/$listUsersOf"),
+        Uri.parse("$userBaseUrl$userId/$listUsersOf"),
         headers: {'x-auth-token': token});
 
     if (response.statusCode == 200) {

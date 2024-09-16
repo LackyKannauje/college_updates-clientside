@@ -4,5 +4,5 @@ const ssipmtImageUrl =
 const userBaseUrl = "https://school-news-liard.vercel.app/api/user/";
 const postBaseUrl = "https://school-news-liard.vercel.app/api/post/";
 
-const loginUrl = userBaseUrl + "login";
-const signupUrl = userBaseUrl + "register";
+const loginUrl = "${userBaseUrl}login";
+const signupUrl = "${userBaseUrl}register";

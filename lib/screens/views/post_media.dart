@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:college_updates/model/post_model.dart';
-import 'package:college_updates/screens/post_view.dart';
+import 'package:college_updates/screens/post_page.dart';
 
 class MediaPostView extends StatelessWidget {
   const MediaPostView({
@@ -31,7 +31,7 @@ class MediaPostView extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
                 onTap: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => PostViewPage(
@@ -46,6 +46,7 @@ class MediaPostView extends StatelessWidget {
                   child: mediaType == 'image'
                       ? Image.network(
                           filteredPosts[index].media[0]['url'],
+                          filterQuality: FilterQuality.low,
                           fit: BoxFit.cover,
                         )
                       : mediaType == 'video'
@@ -56,7 +57,7 @@ class MediaPostView extends StatelessWidget {
                               ? PdfThumbnail(
                                   pdfUrl: filteredPosts[index].media[0]['url'],
                                 )
-                              : Center(
+                              : const Center(
                                   child: Text('Unsupported Media Type'),
                                 ),
                 ),
